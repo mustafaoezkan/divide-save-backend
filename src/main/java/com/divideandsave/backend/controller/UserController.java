@@ -1,41 +1,41 @@
 package com.divideandsave.backend.controller;
 
-import com.divideandsave.backend.model.User;
+import com.divideandsave.backend.dto.request.UserRegisterRequest;
+import com.divideandsave.backend.dto.response.ApiResponse;
+import com.divideandsave.backend.dto.response.UserResponse;
+import com.divideandsave.backend.entity.User;
 import com.divideandsave.backend.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody User user) {
-        User newUser = userService.registerUser(user);
-        return ResponseEntity.ok(newUser);
+    public ResponseEntity<ApiResponse<UserResponse>> registerUser(@RequestBody @Valid UserRegisterRequest request) {
+        User user = userService.registerUser(request);
+        UserResponse response = new UserResponse(
+                user.getId(), user.getName(), user.getEmail(), user.getRole().name(), user.getStatus().name()
+        );
+
+        return ResponseEntity.ok(new ApiResponse<>(true, "User registered successfully", response));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(@PathVariable Long id) {
-        Optional<User> user = userService.getUserById(id);
-        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    @GetMapping("/{email}")
+    public ResponseEntity<ApiResponse<User>> getUserByEmail(@PathVariable String email) {
+        return ResponseEntity.ok(new ApiResponse<>(true, "User found by email successfully", userService.getUserByEmail(email)));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
-        User user = userService.updateUser(id, updatedUser);
-        return user != null ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<User>>> getAllUsers() {
+        return ResponseEntity.ok(new ApiResponse<>(true, "User fetched successfully", userService.getAllUsers()));
     }
 }

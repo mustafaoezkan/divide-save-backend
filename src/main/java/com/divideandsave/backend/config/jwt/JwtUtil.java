@@ -21,7 +21,6 @@ public class JwtUtil {
     @Value("${jwt.expiration}")
     private long expiration;
 
-    // Token oluşturma
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims, userDetails.getUsername());
@@ -37,12 +36,10 @@ public class JwtUtil {
                 .compact();
     }
 
-    // Token'dan kullanıcı adı çıkarma
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    // Token doğrulama
     public boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));

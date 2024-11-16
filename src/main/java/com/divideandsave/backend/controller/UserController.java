@@ -1,5 +1,6 @@
 package com.divideandsave.backend.controller;
 
+import com.divideandsave.backend.dto.request.UpdatePasswordRequest;
 import com.divideandsave.backend.dto.request.UserRegisterRequest;
 import com.divideandsave.backend.dto.response.ApiResponse;
 import com.divideandsave.backend.dto.response.UserResponse;
@@ -21,21 +22,19 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<UserResponse>> registerUser(@RequestBody @Valid UserRegisterRequest request) {
-        User user = userService.registerUser(request);
-        UserResponse response = new UserResponse(
-                user.getId(), user.getName(), user.getEmail(), user.getRole().name(), user.getStatus().name()
-        );
-
+        UserResponse response = userService.registerUser(request);
         return ResponseEntity.ok(new ApiResponse<>(true, "User registered successfully", response));
     }
 
-    @GetMapping("/{email}")
-    public ResponseEntity<ApiResponse<User>> getUserByEmail(@PathVariable String email) {
-        return ResponseEntity.ok(new ApiResponse<>(true, "User found by email successfully", userService.getUserByEmail(email)));
+    @PutMapping("/update-password")
+    public ResponseEntity<ApiResponse<String>> updatePassword(@RequestBody @Valid UpdatePasswordRequest request) {
+        userService.updatePassword(request);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Password updated successfully", null));
     }
 
-    @GetMapping
-    public ResponseEntity<ApiResponse<List<User>>> getAllUsers() {
-        return ResponseEntity.ok(new ApiResponse<>(true, "User fetched successfully", userService.getAllUsers()));
+    @DeleteMapping("/delete")
+    public ResponseEntity<ApiResponse<String>> deleteAccount() {
+        userService.deleteAccount();
+        return ResponseEntity.ok(new ApiResponse<>(true, "Account deleted successfully", null));
     }
 }

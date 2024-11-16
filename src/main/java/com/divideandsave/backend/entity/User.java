@@ -32,10 +32,10 @@ public class User {
     private String profilePictureUrl;
 
     @Enumerated(EnumType.STRING)
-    private Role role = Role.USER;
+    private Role role;
 
     @Enumerated(EnumType.STRING)
-    private Status status = Status.ACTIVE;
+    private Status status;
 
     @CreationTimestamp
     private Timestamp createdAt;

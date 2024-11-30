@@ -4,14 +4,11 @@ import com.divideandsave.backend.dto.request.UpdatePasswordRequest;
 import com.divideandsave.backend.dto.request.UserRegisterRequest;
 import com.divideandsave.backend.dto.response.ApiResponse;
 import com.divideandsave.backend.dto.response.UserResponse;
-import com.divideandsave.backend.entity.User;
 import com.divideandsave.backend.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")

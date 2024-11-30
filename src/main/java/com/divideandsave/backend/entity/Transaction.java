@@ -4,31 +4,34 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.UpdateTimestamp;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "tokens")
+@Table(name = "transactions")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Token {
+public class Transaction {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private int tokenCount;
+    private TransactionType transactionType; // EARNED or SPENT
+
+    @Column(nullable = false)
+    private int amount;
 
     @Column
-    private LocalDateTime lastEarnedAt;
+    private String description;
 
-    @Column
-    private LocalDateTime lastUsedAt;
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
 }

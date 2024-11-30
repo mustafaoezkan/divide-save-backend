@@ -4,31 +4,43 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.CreationTimestamp;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "tokens")
+@Table(name = "videos")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Token {
+public class Video {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(nullable = false)
-    private int tokenCount;
+    private String title;
+
+    @Column(nullable = false)
+    private String videoUrl;
 
     @Column
-    private LocalDateTime lastEarnedAt;
+    private String description;
 
     @Column
-    private LocalDateTime lastUsedAt;
+    private int durationSeconds;
+
+    @Column(nullable = false)
+    private boolean processed = false;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @Column
+    private LocalDateTime processedAt;
 }
